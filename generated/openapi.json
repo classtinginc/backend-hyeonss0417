@@ -1,0 +1,1085 @@
+{
+  "info": {
+    "title": "News-feed API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.3",
+  "paths": {
+    "/auth/signup": {
+      "post": {
+        "operationId": "AuthApiSpec_post_/auth/signup",
+        "tags": [
+          "Auth"
+        ],
+        "summary": "토큰 발급",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "description": "유저 이메일",
+                    "type": "string"
+                  },
+                  "isAdmin": {
+                    "description": "관리자 여부",
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "email",
+                  "isAdmin"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "email": {
+                          "type": "string"
+                        },
+                        "isAdmin": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "createdAt",
+                        "email",
+                        "id",
+                        "isAdmin",
+                        "updatedAt"
+                      ]
+                    },
+                    "accessToken": {
+                      "type": "string"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "accessToken",
+                    "user"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feeds": {
+      "get": {
+        "operationId": "FeedApiSpec_get_/feeds",
+        "tags": [
+          "Feeds"
+        ],
+        "summary": "피드 조회",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "posts": {
+                      "type": "array",
+                      "items": {
+                        "additionalProperties": false,
+                        "type": "object",
+                        "properties": {
+                          "page": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "location": {
+                                "type": "string"
+                              },
+                              "schoolName": {
+                                "type": "string"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "additionalProperties": false,
+                            "required": [
+                              "createdAt",
+                              "id",
+                              "location",
+                              "schoolName",
+                              "updatedAt"
+                            ]
+                          },
+                          "id": {
+                            "type": "number"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "content": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "pageId": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "content",
+                          "createdAt",
+                          "id",
+                          "page",
+                          "pageId",
+                          "title",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "posts"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pages": {
+      "get": {
+        "operationId": "PageApiSpec_get_/pages",
+        "tags": [
+          "Pages"
+        ],
+        "summary": "학교 페이지 목록 조회",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pages": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "schoolName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "createdAt",
+                          "id",
+                          "location",
+                          "schoolName",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "pages"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "PageApiSpec_post_/pages",
+        "tags": [
+          "Pages"
+        ],
+        "summary": "학교 페이지 생성",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "location": {
+                    "description": "학교 지역",
+                    "example": "서울",
+                    "type": "string"
+                  },
+                  "schoolName": {
+                    "description": "학교 이름",
+                    "example": "서울대학교",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "location",
+                  "schoolName"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "page": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "location": {
+                          "type": "string"
+                        },
+                        "schoolName": {
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "createdAt",
+                        "id",
+                        "location",
+                        "schoolName",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "page"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts": {
+      "post": {
+        "operationId": "PostApiSpec_post_/posts",
+        "tags": [
+          "Posts"
+        ],
+        "summary": "학교 소식 발행",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pageId": {
+                    "description": "학교 페이지 ID",
+                    "type": "number"
+                  },
+                  "title": {
+                    "description": "뉴스 제목",
+                    "type": "string"
+                  },
+                  "content": {
+                    "description": "뉴스 내용",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false,
+                "required": [
+                  "content",
+                  "pageId",
+                  "title"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "post": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "content": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "pageId": {
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "content",
+                        "createdAt",
+                        "id",
+                        "pageId",
+                        "title",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "post"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/posts/{id}": {
+      "patch": {
+        "operationId": "PostApiSpec_patch_/posts/{id}",
+        "tags": [
+          "Posts"
+        ],
+        "summary": "학교 소식 수정",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "description": "뉴스 제목",
+                    "type": "string"
+                  },
+                  "content": {
+                    "description": "뉴스 내용",
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "post": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "content": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "pageId": {
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "content",
+                        "createdAt",
+                        "id",
+                        "pageId",
+                        "title",
+                        "updatedAt"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "post"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "PostApiSpec_delete_/posts/{id}",
+        "tags": [
+          "Posts"
+        ],
+        "summary": "학교 소식 삭제",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "default": true
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/pages": {
+      "get": {
+        "operationId": "SubscriptionApiSpec_get_/subscriptions/pages",
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "구독중인 학교 페이지 목록 조회",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "pages": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "schoolName": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "createdAt",
+                          "id",
+                          "location",
+                          "schoolName",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "pages"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/pages/{pageId}": {
+      "post": {
+        "operationId": "SubscriptionApiSpec_post_/subscriptions/pages/{pageId}",
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "학교 페이지 구독",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "subscription": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "number"
+                        },
+                        "subscribedAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "pageId": {
+                          "type": "number"
+                        },
+                        "userId": {
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": false,
+                      "required": [
+                        "id",
+                        "pageId",
+                        "subscribedAt",
+                        "userId"
+                      ]
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "subscription"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "SubscriptionApiSpec_delete_/subscriptions/pages/{pageId}",
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "학교 페이지 구독 취소",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "default": true
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "ok"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/pages/{pageId}/posts": {
+      "get": {
+        "operationId": "SubscriptionApiSpec_get_/subscriptions/pages/{pageId}/posts",
+        "tags": [
+          "Subscriptions"
+        ],
+        "summary": "구독중인 학교 페이지별 소식 조회",
+        "security": [
+          {
+            "jwt": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "pageId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "posts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "number"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "content": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "createdAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updatedAt": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "pageId": {
+                            "type": "number"
+                          }
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "content",
+                          "createdAt",
+                          "id",
+                          "pageId",
+                          "title",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "posts"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenApiValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SignUp": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "description": "유저 이메일",
+            "type": "string"
+          },
+          "isAdmin": {
+            "description": "관리자 여부",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "isAdmin"
+        ]
+      },
+      "OpenApiValidationError": {
+        "type": "object",
+        "properties": {
+          "statusCode": {
+            "type": "number"
+          },
+          "message": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "validatorErrors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "message",
+                "path"
+              ]
+            }
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "error",
+          "message",
+          "statusCode",
+          "validatorErrors"
+        ]
+      },
+      "CreatePageDto": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "description": "학교 지역",
+            "example": "서울",
+            "type": "string"
+          },
+          "schoolName": {
+            "description": "학교 이름",
+            "example": "서울대학교",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "location",
+          "schoolName"
+        ]
+      },
+      "CreatePost": {
+        "type": "object",
+        "properties": {
+          "pageId": {
+            "description": "학교 페이지 ID",
+            "type": "number"
+          },
+          "title": {
+            "description": "뉴스 제목",
+            "type": "string"
+          },
+          "content": {
+            "description": "뉴스 내용",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "required": [
+          "content",
+          "pageId",
+          "title"
+        ]
+      },
+      "UpdatePost": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "뉴스 제목",
+            "type": "string"
+          },
+          "content": {
+            "description": "뉴스 내용",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

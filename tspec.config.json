@@ -1,0 +1,16 @@
+{
+  "specPathGlobs": ["src/**/*.controller.ts"],
+  "outputPath": "generated/openapi.json",
+  "specVersion": 3,
+  "openapi": {
+    "title": "News-feed API",
+    "version": "1.0.0",
+    "securityDefinitions": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
