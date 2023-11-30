@@ -17,7 +17,7 @@ COPY ./.eslintrc.js ./.eslintrc.js
 COPY ./tsconfig.json ./tsconfig.json
 COPY ./tsconfig.build.json ./tsconfig.build.json
 COPY ./tspec.config.json ./tspec.config.json
-COPY ./jest.e2e.json ./jest.e2e.json
+COPY ./jest-e2e.json ./jest-e2e.json
 
 # Migrate
 RUN yarn migrate --name init
