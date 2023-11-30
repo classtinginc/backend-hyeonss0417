@@ -14,16 +14,18 @@ export class PostsService {
   async publish(createPostDto: CreatePost) {
     const { pageId, title, content } = createPostDto;
 
-    const post = await this.prismaService.post.create({
-      data: {
-        title,
-        content,
-        pageId,
-      },
-    });
+    const post = await this.prismaService.$transaction(async (prisma) => {
+      const postInner = await prisma.post.create({
+        data: {
+          title,
+          content,
+          pageId,
+        },
+      });
+      await this.feedsService.deliverPostToFeeds(prisma, postInner);
 
-    // NOTE: fire and forget
-    this.feedsService.deliverFeed(post); // eslint-disable-line @typescript-eslint/no-floating-promises
+      return postInner;
+    });
 
     return { post };
   }

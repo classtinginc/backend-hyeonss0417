@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { type Post, type User } from '@prisma/client';
 
 import { PrismaService } from '../prisma.service';
+import { type Transaction } from '../types/prisma';
 
 @Injectable()
 export class FeedsService {
@@ -11,25 +12,26 @@ export class FeedsService {
     const feeds = await this.prismaService.feed.findMany({
       where: { userId: user.id },
       include: { post: { include: { page: true } } },
-      orderBy: { createdAt: 'desc' },
+      orderBy: { post: { createdAt: 'desc' } },
     });
 
     return { posts: feeds.map((feed) => feed.post) };
   }
 
-  async deliverFeed(post: Post) {
-    const subscriptions = await this.prismaService.pageSubscription.findMany({
-      where: { pageId: post.pageId },
+  async deliverPostToFeeds(transaction: Transaction, post: Post) {
+    const users = await transaction.user.findMany({
+      where: {
+        pageSubscriptions: { some: { pageId: post.pageId } },
+        feeds: { none: { postId: post.id } },
+      },
     });
 
     // NOTE: SQLite does not support bulk insert
-    const inserts = subscriptions.map((subscription) =>
-      this.prismaService.feed.create({
-        data: { userId: subscription.userId, postId: post.id },
-      }),
-    );
-    await this.prismaService.$transaction(inserts);
-
-    return { ok: true };
+    for (const user of users) {
+      // eslint-disable-next-line no-await-in-loop
+      await transaction.feed.create({
+        data: { userId: user.id, postId: post.id, createdAt: post.createdAt },
+      });
+    }
   }
 }
