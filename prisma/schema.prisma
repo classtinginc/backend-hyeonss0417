@@ -10,11 +10,10 @@ datasource db {
 
 model User {
   id    Int     @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   email String  @unique
   isAdmin Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   pageOwnerships PageOwnership[]
   pageSubscriptions PageSubscription[]
@@ -23,11 +22,10 @@ model User {
 
 model Page {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   location String
   schoolName String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   pageOwnerships PageOwnership[]
   pageSubscriptions PageSubscription[]
@@ -56,11 +54,10 @@ model PageSubscription {
 
 model Post {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   title     String
   content   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   page Page @relation(fields: [pageId], references: [id])
   pageId Int
@@ -69,11 +66,9 @@ model Post {
 
 model Feed {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  viewedAt DateTime?
-
   user User @relation(fields: [userId], references: [id])
   userId Int
-  post Post @relation(fields: [postId], references: [id])
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId Int
+  createdAt DateTime @default(now())
 }
