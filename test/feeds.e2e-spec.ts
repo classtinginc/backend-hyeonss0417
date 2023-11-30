@@ -2,6 +2,7 @@ import { type INestApplication } from '@nestjs/common';
 import request from 'supertest';
 
 import { PrismaService } from '../src/prisma.service';
+import { sleep } from '../src/utils';
 import { fakeDate, fakeString, fakeUser, initApp } from './common';
 
 describe('Feeds (e2e)', () => {
@@ -57,6 +58,8 @@ describe('Feeds (e2e)', () => {
       const feedRes = await request(app.getHttpServer())
         .get(`/feeds`)
         .set('Authorization', `Bearer ${student.accessToken}`);
+      // NOTE: 피드에 추가하는 로직이 fire-and-forget 패턴으로 구현되어 있기 때문에 1초 대기
+      await sleep(1000);
 
       // Then
       expect(postRes.status).toBe(201);

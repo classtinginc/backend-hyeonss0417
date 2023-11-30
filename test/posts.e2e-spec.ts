@@ -2,6 +2,7 @@ import { type INestApplication } from '@nestjs/common';
 import request from 'supertest';
 
 import { PrismaService } from '../src/prisma.service';
+import { sleep } from '../src/utils';
 import { fakeString, fakeUser, initApp } from './common';
 
 describe('Posts (e2e)', () => {
@@ -84,6 +85,8 @@ describe('Posts (e2e)', () => {
         .post('/posts')
         .set('Authorization', `Bearer ${admin.accessToken}`)
         .send(post);
+      // NOTE: 피드에 추가하는 로직이 fire-and-forget 패턴으로 구현되어 있기 때문에 1초 대기
+      await sleep(1000);
 
       // Then
       expect(res.status).toBe(201);

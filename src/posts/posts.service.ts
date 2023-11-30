@@ -18,18 +18,21 @@ export class PostsService {
   async publish(createPostDto: CreatePost) {
     const { pageId, title, content } = createPostDto;
 
-    const post = await this.prismaService.$transaction(async (prisma) => {
-      const postInner = await prisma.post.create({
-        data: {
-          title,
-          content,
-          pageId,
-        },
-      });
-      await this.feedsService.deliverPostToFeeds(prisma, postInner);
-
-      return postInner;
+    const post = await this.prismaService.post.create({
+      data: {
+        title,
+        content,
+        pageId,
+      },
     });
+
+    // NOTE: 응답 지연을 막기 위해 fire-and-forget 패턴으로 구현
+    // TODO: 메시지 큐를 사용하여 구현
+    this.feedsService
+      .deliverPostToFeeds(post.id) // eslint-disable-line @typescript-eslint/no-floating-promises
+      .catch((error) => {
+        console.error(error);
+      });
 
     return { post };
   }
