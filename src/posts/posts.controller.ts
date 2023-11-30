@@ -9,7 +9,9 @@ import {
   Request,
 } from '@nestjs/common';
 import { Express } from 'express';
+import { type Tspec } from 'tspec';
 
+import { type ResponseType } from '../types/schema';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsService } from './posts.service';
@@ -49,3 +51,34 @@ export class PostsController {
     return this.postsService.remove(Number(id));
   }
 }
+
+export type PostApiSpec = Tspec.DefineApiSpec<{
+  tags: ['Posts'];
+  basePath: '/posts';
+  security: 'jwt';
+  paths: {
+    '/': {
+      post: {
+        body: CreatePostDto;
+        responses: {
+          201: ResponseType<PostsController, 'create'>;
+        };
+      };
+    };
+    '/{id}': {
+      patch: {
+        path: { id: number };
+        body: UpdatePostDto;
+        responses: {
+          200: ResponseType<PostsController, 'update'>;
+        };
+      };
+      delete: {
+        path: { id: number };
+        responses: {
+          204: ResponseType<PostsController, 'remove'>;
+        };
+      };
+    };
+  };
+}>;

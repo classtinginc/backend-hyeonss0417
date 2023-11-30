@@ -1,6 +1,8 @@
 import { Body, Controller, Get, HttpCode, Post, Request } from '@nestjs/common';
 import { Express } from 'express';
+import { type Tspec } from 'tspec';
 
+import { type ResponseType } from '../types/schema';
 import { CreatePageDto } from './dto/create-page.dto';
 import { PagesService } from './pages.service';
 
@@ -22,3 +24,24 @@ export class PagesController {
     return this.pagesService.findAll();
   }
 }
+
+export type PageApiSpec = Tspec.DefineApiSpec<{
+  tags: ['Pages'];
+  basePath: '/pages';
+  security: 'jwt';
+  paths: {
+    '/': {
+      post: {
+        body: CreatePageDto;
+        responses: {
+          201: ResponseType<PagesController, 'create'>;
+        };
+      };
+      get: {
+        responses: {
+          200: ResponseType<PagesController, 'findAll'>;
+        };
+      };
+    };
+  };
+}>;
