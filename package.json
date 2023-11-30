@@ -18,7 +18,8 @@
     "test:cov": "yarn pretest && DATABASE_URL=file:./test.db jest --coverage",
     "test:debug": "yarn pretest && DATABASE_URL=file:./test.db node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "yarn pretest && yarn openapi && DATABASE_URL=file:./test.db jest --config ./test/jest-e2e.json",
-    "openapi": "yarn tspec generate --outputPath generated/openapi.json"
+    "openapi": "yarn tspec generate --outputPath generated/openapi.json",
+    "migrate": "DATABASE_URL=file:./dev.db yarn prisma migrate dev"
   },
   "jest": {
     "collectCoverageFrom": [
