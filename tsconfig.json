@@ -13,6 +13,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "target": "ES2022",
+    "typeRoots": ["./node_modules/@types", "./types"],
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./src",
@@ -24,7 +25,7 @@
     "strict": true
   },
   "include": [
-    "src/**/*"
+    "src/**/*", "types/**/*"
   ],
   "exclude": [
     "node_modules",
