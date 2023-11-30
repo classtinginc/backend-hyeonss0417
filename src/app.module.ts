@@ -5,10 +5,11 @@ import { AppController } from './app.controller';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { PagesModule } from './pages/pages.module';
+import { PostsModule } from './posts/posts.module';
 import { PrismaService } from './prisma.service';
 
 @Module({
-  imports: [AuthModule, PagesModule],
+  imports: [AuthModule, PagesModule, PostsModule],
   controllers: [AppController],
   providers: [
     PrismaService,
