@@ -1,5 +1,9 @@
 # School News-feed
 
+## API 명세
+API 문서화는 제가 직접 개발한 오픈소스 라이브러리인 [Tspec](https://ts-spec.github.io/tspec/)을 사용했습니다.
+서버를 실행한 뒤 http://localhost:3000/docs 에서 확인할 수 있습니다.
+
 ## Specification
 
 [pages] 학교 관리자는 학교를 페이지를 운영하여 학교 소식을 발행할 수 있다.
