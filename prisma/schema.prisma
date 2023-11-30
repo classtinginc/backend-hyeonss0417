@@ -6,3 +6,74 @@ datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
 }
+
+
+model User {
+  id    Int     @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email String  @unique
+  isAdmin Boolean @default(false)
+
+  pageOwnerships PageOwnership[]
+  pageSubscriptions PageSubscription[]
+  feeds Feed[]
+}
+
+model Page {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  location String
+  schoolName String
+
+  pageOwnerships PageOwnership[]
+  pageSubscriptions PageSubscription[]
+  posts    Post[]
+}
+
+model PageOwnership {
+  id        Int      @id @default(autoincrement())
+  ownedAt DateTime @default(now())
+
+  page Page @relation(fields: [pageId], references: [id])
+  pageId Int
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model PageSubscription {
+  id        Int      @id @default(autoincrement())
+  subscribedAt DateTime @default(now())
+
+  page Page @relation(fields: [pageId], references: [id])
+  pageId Int
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title     String
+  content   String?
+
+  page Page @relation(fields: [pageId], references: [id])
+  pageId Int
+  feeds Feed[]
+}
+
+model Feed {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  viewedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  post Post @relation(fields: [postId], references: [id])
+  postId Int
+}
