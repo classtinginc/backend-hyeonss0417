@@ -35,6 +35,7 @@ lerna-debug.log*
 
 # Prisma
 prisma/dev.db
+prisma/test.db
 
 # Build
 tsconfig.build.tsbuildinfo
