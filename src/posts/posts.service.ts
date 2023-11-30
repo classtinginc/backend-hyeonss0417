@@ -1,4 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { FeedsService } from '../feeds/feeds.service';
 import { PrismaService } from '../prisma.service';
@@ -54,7 +58,7 @@ export class PostsService {
     const post = await this.prismaService.post.findUnique({ where: { id } });
 
     if (!post) {
-      throw new HttpException('학교 소식이 존재하지 않습니다.', 404);
+      throw new NotFoundException('학교 소식이 존재하지 않습니다.');
     }
   }
 
@@ -64,7 +68,7 @@ export class PostsService {
     });
 
     if (!user) {
-      throw new HttpException('권한이 없습니다.', 403);
+      throw new ForbiddenException('권한이 없습니다.');
     }
   }
 
@@ -75,7 +79,7 @@ export class PostsService {
     });
 
     if (!post) {
-      throw new HttpException('권한이 없습니다.', 403);
+      throw new ForbiddenException('권한이 없습니다.');
     }
 
     await this.assertPermissionByPageId(userId, post.page.id);

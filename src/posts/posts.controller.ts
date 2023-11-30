@@ -9,7 +9,7 @@ import {
 import { type Tspec } from 'tspec';
 
 import { TypedReq } from '../types/express';
-import { type Operation } from '../types/openapi';
+import { type ForbiddenError, type Operation } from '../types/openapi';
 import { PostsService } from './posts.service';
 import { type CreatePost, type UpdatePost } from './types';
 
@@ -51,11 +51,26 @@ export type PostApiSpec = Tspec.DefineApiSpec<{
   security: 'jwt';
   paths: {
     '/posts': {
-      post: Operation<'학교 소식 발행', PostsController, 'publish', 201>;
+      post: Operation<
+        '학교 소식 발행',
+        PostsController['publish'],
+        201,
+        ForbiddenError
+      >;
     };
     '/posts/{id}': {
-      patch: Operation<'학교 소식 수정', PostsController, 'update'>;
-      delete: Operation<'학교 소식 삭제', PostsController, 'remove', 204>;
+      patch: Operation<
+        '학교 소식 수정',
+        PostsController['update'],
+        200,
+        ForbiddenError
+      >;
+      delete: Operation<
+        '학교 소식 삭제',
+        PostsController['remove'],
+        204,
+        ForbiddenError
+      >;
     };
   };
 }>;

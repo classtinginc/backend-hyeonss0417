@@ -9,7 +9,11 @@ import {
 import { type Tspec } from 'tspec';
 
 import { TypedReq } from '../types/express';
-import { type Operation } from '../types/openapi';
+import {
+  type ForbiddenError,
+  type NotFoundError,
+  type Operation,
+} from '../types/openapi';
 import { SubscriptionsService } from './subscriptions.service';
 
 @Controller('subscriptions')
@@ -57,28 +61,29 @@ export type SubscriptionApiSpec = Tspec.DefineApiSpec<{
     '/subscriptions/pages': {
       get: Operation<
         '구독중인 학교 페이지 목록 조회',
-        SubscriptionsController,
-        'listPages'
+        SubscriptionsController['listPages']
       >;
     };
     '/subscriptions/pages/{pageId}': {
       post: Operation<
         '학교 페이지 구독',
-        SubscriptionsController,
-        'subscribe',
-        201
+        SubscriptionsController['subscribe'],
+        201,
+        NotFoundError
       >;
       delete: Operation<
         '학교 페이지 구독 취소',
-        SubscriptionsController,
-        'unsubscribe'
+        SubscriptionsController['unsubscribe'],
+        204,
+        NotFoundError
       >;
     };
     '/subscriptions/pages/{pageId}/posts': {
       get: Operation<
         '구독중인 학교 페이지별 소식 조회',
-        SubscriptionsController,
-        'listPosts'
+        SubscriptionsController['listPosts'],
+        200,
+        NotFoundError | ForbiddenError
       >;
     };
   };

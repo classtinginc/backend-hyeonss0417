@@ -22,7 +22,7 @@ export type FeedApiSpec = Tspec.DefineApiSpec<{
   security: 'jwt';
   paths: {
     '/feeds': {
-      get: Operation<'피드 조회', FeedsController, 'getFeed'>;
+      get: Operation<'피드 조회', FeedsController['getFeed']>;
     };
   };
 }>;

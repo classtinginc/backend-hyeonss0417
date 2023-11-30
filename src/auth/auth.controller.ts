@@ -23,7 +23,7 @@ export type AuthApiSpec = Tspec.DefineApiSpec<{
   tags: ['Auth'];
   paths: {
     '/auth/signup': {
-      post: Operation<'토큰 발급', AuthController, 'login'>;
+      post: Operation<'토큰 발급', AuthController['login']>;
     };
   };
 }>;

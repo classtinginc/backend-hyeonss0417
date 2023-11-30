@@ -1,4 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { type User } from '@prisma/client';
 
 import { PrismaService } from '../prisma.service';
@@ -53,7 +57,7 @@ export class SubscriptionsService {
     });
 
     if (!subscription) {
-      throw new HttpException('구독하지 않은 페이지입니다.', 403);
+      throw new ForbiddenException('구독하지 않은 페이지입니다.');
     }
 
     const posts = await this.prismaService.post.findMany({
@@ -70,7 +74,7 @@ export class SubscriptionsService {
     });
 
     if (!page) {
-      throw new HttpException('페이지가 존재하지 않습니다.', 404);
+      throw new NotFoundException('페이지가 존재하지 않습니다.');
     }
   }
 }

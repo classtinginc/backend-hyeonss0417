@@ -1,4 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { type User } from '@prisma/client';
 
 import { PrismaService } from '../prisma.service';
@@ -10,7 +14,7 @@ export class PagesService {
 
   async create(user: User, createPageDto: CreatePageDto) {
     if (!user.isAdmin) {
-      throw new HttpException('관리자만 페이지를 생성할 수 있습니다.', 403);
+      throw new ForbiddenException('관리자만 페이지를 생성할 수 있습니다.');
     }
 
     const { location, schoolName } = createPageDto;
@@ -20,7 +24,7 @@ export class PagesService {
     });
 
     if (exist) {
-      throw new HttpException('이미 같은 학교의 페이지가 존재합니다.', 400);
+      throw new BadRequestException('이미 같은 학교의 페이지가 존재합니다.');
     }
 
     const page = await this.prismaService.$transaction(async (prisma) => {

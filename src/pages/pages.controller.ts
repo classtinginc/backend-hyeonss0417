@@ -2,9 +2,13 @@ import { Controller, Get, HttpCode, Post, Request } from '@nestjs/common';
 import { type Tspec } from 'tspec';
 
 import { TypedReq } from '../types/express';
-import { type Operation } from '../types/openapi';
-import { type CreatePageDto } from './types';
+import {
+  type BadRequestError,
+  type ForbiddenError,
+  type Operation,
+} from '../types/openapi';
 import { PagesService } from './pages.service';
+import { type CreatePageDto } from './types';
 
 @Controller('pages')
 export class PagesController {
@@ -29,8 +33,13 @@ export type PageApiSpec = Tspec.DefineApiSpec<{
   security: 'jwt';
   paths: {
     '/pages': {
-      post: Operation<'학교 페이지 생성', PagesController, 'create', 201>;
-      get: Operation<'학교 페이지 목록 조회', PagesController, 'findAll'>;
+      post: Operation<
+        '학교 페이지 생성',
+        PagesController['create'],
+        201,
+        BadRequestError | ForbiddenError
+      >;
+      get: Operation<'학교 페이지 목록 조회', PagesController['findAll']>;
     };
   };
 }>;
