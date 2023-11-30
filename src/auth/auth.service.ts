@@ -1,9 +1,8 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
+import { type SignUp, type TokenPayload } from '../auth/types';
 import { PrismaService } from '../prisma.service';
-import { type GenerateToken } from './dto/generate-token.dto';
-import { type TokenPayload } from './dto/token-payload';
 
 @Injectable()
 export class AuthService {
@@ -12,21 +11,17 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async generateToken(body: GenerateToken) {
-    const { email } = body;
+  async signUp(body: SignUp) {
+    const { email, isAdmin } = body;
 
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.upsert({
       where: { email },
-      select: { id: true },
+      update: { isAdmin },
+      create: { email, isAdmin },
     });
-
-    if (!user) {
-      throw new HttpException('User not found', 404);
-    }
-
     const payload: TokenPayload = { sub: user.id };
     const accessToken = this.jwtService.sign(payload);
 
-    return { accessToken };
+    return { user, accessToken };
   }
 }

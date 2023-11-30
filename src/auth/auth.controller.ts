@@ -1,34 +1,29 @@
-import { Body, Controller, HttpCode, Post } from '@nestjs/common';
+import { Controller, HttpCode, Post, Request } from '@nestjs/common';
 import { type Tspec } from 'tspec';
 
-import { type ResponseType } from '../types/schema';
+import { TypedReq } from '../types/express';
+import { type Operation } from '../types/openapi';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
-import { GenerateToken } from './dto/generate-token.dto';
+import { type SignUp } from './types';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Public()
+  @Post('signup')
   @HttpCode(200)
-  @Post('token')
-  login(@Body() body: GenerateToken) {
-    return this.authService.generateToken(body);
+  login(@Request() req: TypedReq<{ body: SignUp }>) {
+    return this.authService.signUp(req.body);
   }
 }
 
 export type AuthApiSpec = Tspec.DefineApiSpec<{
   tags: ['Auth'];
-  basePath: '/auth';
   paths: {
-    '/token': {
-      post: {
-        body: GenerateToken;
-        responses: {
-          200: ResponseType<AuthController, 'login'>;
-        };
-      };
+    '/auth/signup': {
+      post: Operation<'토큰 발급', AuthController, 'login'>;
     };
   };
 }>;

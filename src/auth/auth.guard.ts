@@ -6,11 +6,11 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
-import { type Request } from 'express';
 
 import { PrismaService } from '../prisma.service';
+import { type TypedReq } from '../types/express';
 import { IS_PUBLIC_KEY } from './decorators/public.decorator';
-import { type TokenPayload } from './dto/token-payload';
+import { type TokenPayload } from './types';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest<TypedReq>();
     const token = this.getTokenFromRequest(request);
 
     if (!token) {
@@ -49,7 +49,7 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 
-  private getTokenFromRequest(request: Request): string | undefined {
+  private getTokenFromRequest(request: TypedReq): string | undefined {
     const authorization = request.headers.authorization || '';
     const [type, token] = authorization.split(' ');
 
