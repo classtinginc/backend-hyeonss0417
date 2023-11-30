@@ -1,12 +1,12 @@
 import { type INestApplication } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import request from 'supertest';
 
+import { PrismaService } from '../src/prisma.service';
 import { fakeString, fakeUser, initApp } from './common';
 
 describe('Posts (e2e)', () => {
   let app: INestApplication;
-  const prisma = new PrismaClient();
+  const prisma = new PrismaService();
 
   beforeAll(async () => {
     app = await initApp();
