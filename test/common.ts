@@ -41,7 +41,9 @@ export const initApp = async () => {
   }).compile();
 
   const app = moduleFixture.createNestApplication({ bodyParser: false });
-  useOpenAPIValidator(app, 'generated/openapi.json');
+  useOpenAPIValidator(app, 'generated/openapi.json', {
+    validateResponses: true,
+  });
   app.enableShutdownHooks();
   await app.init();
 

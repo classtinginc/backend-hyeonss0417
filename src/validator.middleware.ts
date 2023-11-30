@@ -6,6 +6,7 @@ import { type OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 export const useOpenAPIValidator = (
   app: INestApplication,
   apiSpec: string | OpenAPIV3.Document,
+  option?: { validateResponses?: boolean },
 ) => {
   app.use(bodyParser.json());
   const validators = OpenApiValidator.middleware({
@@ -15,7 +16,7 @@ export const useOpenAPIValidator = (
       coerceTypes: true,
       removeAdditional: true,
     },
-    validateResponses: false,
+    validateResponses: option?.validateResponses ?? false,
   });
   app.use(validators);
 };
