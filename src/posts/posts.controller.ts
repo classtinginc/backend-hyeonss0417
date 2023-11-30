@@ -1,20 +1,17 @@
 import {
-  Body,
   Controller,
   Delete,
   HttpCode,
-  Param,
   Patch,
   Post,
   Request,
 } from '@nestjs/common';
-import { Express } from 'express';
 import { type Tspec } from 'tspec';
 
-import { type ResponseType } from '../types/schema';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { TypedReq } from '../types/express';
+import { type Operation } from '../types/openapi';
 import { PostsService } from './posts.service';
+import { type CreatePost, type UpdatePost } from './types';
 
 @Controller('posts')
 export class PostsController {
@@ -22,63 +19,43 @@ export class PostsController {
 
   @Post()
   @HttpCode(201)
-  async create(
-    @Request() req: Express.Request,
-    @Body() createPostDto: CreatePostDto,
-  ) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    await this.postsService.assertPermission(req.user.id, createPostDto.pageId);
+  async publish(@Request() req: TypedReq<{ body: CreatePost }>) {
+    const { user, body } = req;
+    await this.postsService.assertPermissionByPageId(user.id, body.pageId);
 
-    return this.postsService.create(createPostDto);
+    return this.postsService.publish(body);
   }
 
   @Patch(':id')
   async update(
-    @Request() req: Express.Request,
-    @Param('id') id: string,
-    @Body() updatePostDto: UpdatePostDto,
+    @Request() req: TypedReq<{ params: { id: number }; body: UpdatePost }>,
   ) {
-    await this.postsService.assertPermission(req.user.id, Number(id));
+    const { user, params, body } = req;
+    await this.postsService.assertPermissionByPostId(user.id, params.id);
 
-    return this.postsService.update(Number(id), updatePostDto);
+    return this.postsService.update(params.id, body);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async remove(@Request() req: Express.Request, @Param('id') id: string) {
-    await this.postsService.assertPermission(req.user.id, Number(id));
+  async remove(@Request() req: TypedReq<{ params: { id: number } }>) {
+    const { user, params } = req;
+    await this.postsService.assertPermissionByPostId(user.id, params.id);
 
-    return this.postsService.remove(Number(id));
+    return this.postsService.remove(params.id);
   }
 }
 
 export type PostApiSpec = Tspec.DefineApiSpec<{
   tags: ['Posts'];
-  basePath: '/posts';
   security: 'jwt';
   paths: {
-    '/': {
-      post: {
-        body: CreatePostDto;
-        responses: {
-          201: ResponseType<PostsController, 'create'>;
-        };
-      };
+    '/posts': {
+      post: Operation<'학교 소식 발행', PostsController, 'publish', 201>;
     };
-    '/{id}': {
-      patch: {
-        path: { id: number };
-        body: UpdatePostDto;
-        responses: {
-          200: ResponseType<PostsController, 'update'>;
-        };
-      };
-      delete: {
-        path: { id: number };
-        responses: {
-          204: ResponseType<PostsController, 'remove'>;
-        };
-      };
+    '/posts/{id}': {
+      patch: Operation<'학교 소식 수정', PostsController, 'update'>;
+      delete: Operation<'학교 소식 삭제', PostsController, 'remove', 204>;
     };
   };
 }>;

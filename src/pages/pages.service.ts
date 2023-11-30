@@ -2,7 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { type User } from '@prisma/client';
 
 import { PrismaService } from '../prisma.service';
-import { type CreatePageDto } from './dto/create-page.dto';
+import { type CreatePageDto } from './types';
 
 @Injectable()
 export class PagesService {

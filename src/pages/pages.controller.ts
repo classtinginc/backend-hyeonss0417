@@ -1,9 +1,9 @@
-import { Body, Controller, Get, HttpCode, Post, Request } from '@nestjs/common';
-import { Express } from 'express';
+import { Controller, Get, HttpCode, Post, Request } from '@nestjs/common';
 import { type Tspec } from 'tspec';
 
-import { type ResponseType } from '../types/schema';
-import { CreatePageDto } from './dto/create-page.dto';
+import { TypedReq } from '../types/express';
+import { type Operation } from '../types/openapi';
+import { type CreatePageDto } from './types';
 import { PagesService } from './pages.service';
 
 @Controller('pages')
@@ -12,11 +12,10 @@ export class PagesController {
 
   @Post()
   @HttpCode(201)
-  create(
-    @Request() req: Express.Request,
-    @Body() createPageDto: CreatePageDto,
-  ) {
-    return this.pagesService.create(req.user, createPageDto);
+  create(@Request() req: TypedReq<{ body: CreatePageDto }>) {
+    const { user, body } = req;
+
+    return this.pagesService.create(user, body);
   }
 
   @Get()
@@ -27,21 +26,11 @@ export class PagesController {
 
 export type PageApiSpec = Tspec.DefineApiSpec<{
   tags: ['Pages'];
-  basePath: '/pages';
   security: 'jwt';
   paths: {
-    '/': {
-      post: {
-        body: CreatePageDto;
-        responses: {
-          201: ResponseType<PagesController, 'create'>;
-        };
-      };
-      get: {
-        responses: {
-          200: ResponseType<PagesController, 'findAll'>;
-        };
-      };
+    '/pages': {
+      post: Operation<'학교 페이지 생성', PagesController, 'create', 201>;
+      get: Operation<'학교 페이지 목록 조회', PagesController, 'findAll'>;
     };
   };
 }>;
